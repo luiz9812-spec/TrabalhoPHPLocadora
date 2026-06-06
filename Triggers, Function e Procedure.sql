@@ -1,0 +1,118 @@
+/* Verifica antes de inserir um novo registro na tabela EMPRESTIMOS se o jogo está disponível */
+
+DELIMITER $$
+
+CREATE TRIGGER mudar_status_emprestar
+BEFORE INSERT ON EMPRESTIMOS
+FOR EACH ROW
+BEGIN
+	IF (SELECT DISPONIVEL FROM JOGOS WHERE ID_JOGO = NEW.ID_JOGO) = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Jogo já está emprestado';
+	END IF;
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE TRIGGER mudar_status_reserva
+BEFORE INSERT ON RESERVAS
+FOR EACH ROW
+BEGIN
+	IF (SELECT DISPONIVEL FROM JOGOS WHERE ID_JOGO = NEW.ID_JOGO) = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Jogo já está emprestado';
+	END IF;
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE TRIGGER atualizar_status_reserva
+AFTER INSERT ON RESERVAS
+FOR EACH ROW
+BEGIN
+    UPDATE JOGOS SET DISPONIVEL = 0 WHERE ID_JOGO = NEW.ID_JOGO;
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE TRIGGER mudar_status_prazo
+AFTER UPDATE ON RESERVAS
+FOR EACH ROW
+BEGIN
+	IF OLD.FINALIZAR_RESERVA = 0 AND NEW.FINALIZAR_RESERVA = 1 THEN
+    UPDATE JOGOS SET DISPONIVEL = 1 WHERE ID_JOGO = NEW.ID_JOGO;
+	END IF;
+END $$
+
+DELIMITER ;
+
+/* Após inserir um novo registro na tabela EMPRESTIMOS atualiza o status do jogo para não disponível */
+
+DELIMITER $$
+
+CREATE TRIGGER atualizar_status_emprestar
+AFTER INSERT ON EMPRESTIMOS
+FOR EACH ROW
+BEGIN
+    UPDATE JOGOS SET DISPONIVEL = 0 WHERE ID_JOGO = NEW.ID_JOGO;
+END $$
+
+DELIMITER ;
+
+/* Após modificar o campo DEVOLVIDO em algum registro na tabela EMPRESTIMO atualiza o status do jogo para disponível  */
+
+DELIMITER $$
+
+CREATE TRIGGER mudar_status_devolucao
+AFTER UPDATE ON EMPRESTIMOS
+FOR EACH ROW
+BEGIN
+	IF NEW.DEVOLVIDO = 1 THEN
+		UPDATE JOGOS SET DISPONIVEL = 1 WHERE ID_JOGO = NEW.ID_JOGO;
+	END IF;
+END $$
+
+DELIMITER ;
+
+/* Recebe a data inicial e a data final e calcula os dias */
+
+DELIMITER $$
+
+CREATE FUNCTION calcular_dias_emprestimo(DATA1 DATE, DATA2 DATE)
+RETURNS INT
+DETERMINISTIC
+BEGIN
+	RETURN DATEDIFF(DATA2, DATA1);
+END $$
+
+DELIMITER ;
+
+/* Uma procedure que realiza o emprestimo recebendo o id do jogo, o cpf do cliente e a data de entrega */
+
+DELIMITER $$
+
+CREATE PROCEDURE realizar_emprestimo(IN P_ID_JOGO INT, IN P_CPF CHAR(11), IN P_DATA_ENTREGA DATE)
+BEGIN
+	DECLARE STATUS_JOGO BOOLEAN;
+    
+    SELECT DISPONIVEL INTO STATUS_JOGO FROM JOGOS WHERE ID_JOGO = P_ID_JOGO;
+    
+    IF STATUS_JOGO = 1 THEN
+		
+        INSERT INTO EMPRESTIMOS (ID_JOGO, CPF, DATA_EMPRESTIMO, DATA_ENTREGA) VALUES
+			(P_ID_JOGO, P_CPF, CURDATE(), P_DATA_ENTREGA);
+            
+	ELSE 
+		SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Jogo indisponível';
+	END IF;
+    
+END $$
+
+DELIMITER ;
