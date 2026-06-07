@@ -98,7 +98,7 @@
             <?php foreach($resultado as $emprestimo) { ?>
             <tr>
                 <td>
-                    <a href="form_alterar_produto.php?id=<?= $emprestimo["ID"] ?>">Alterar</a>
+                    <a href="form-alterar-emprestimo.php?id=<?= $emprestimo["ID"] ?>">Alterar</a>
                 </td>
                 <td><?= $emprestimo["ID"] ?></td>
                 <td><?= $emprestimo["JOGO"] ?></td>

@@ -56,7 +56,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game Rent - Painel do Cliente</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
@@ -69,8 +69,8 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
         </div>
         <nav class="cabecalho-nav">
             <ul>
-                <li><a href="../listaplataforma.php">Lista de Jogos</a></li>
-                <li><a href="../noticias.php">Notícias</a></li>
+                <li><a href="./listaplataforma.php">Lista de Jogos</a></li>
+                <li><a href="./noticias.php">Notícias</a></li>
             </ul>
         </nav>
         <?= $login ?>
@@ -79,7 +79,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
     <main>
         <article class="introducao">
             <ul class="breadcrumb">
-                <li><a href="../index.php">Home</a></li>
+                <li><a href="./index.php">Home</a></li>
                 <li>Painel do Cliente</li>
             </ul>
         </article>

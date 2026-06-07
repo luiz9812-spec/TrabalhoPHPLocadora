@@ -93,9 +93,9 @@
         <h1 class="titulo">Ultimos Cadastros</h1>
         <section class="ultimos-cadastros">
             <?php foreach($resultado as $jogo) { ?>
-            <a class="card-link" href="jogo.php?id=<?= $jogo['ID_JOGO'] ?>">    
+            <a class="card-link" href="jogo.php?idjogo=<?= $jogo['ID_JOGO'] ?>">    
                 <div class="card">
-                    <img src="../img/jogos/<?= $jogo["ID_JOGO"] ?>.png" alt="Lista de jogo para <?= $jogo["NOME"] ?>">
+                    <img src="./img/jogos/<?= $jogo["ID_JOGO"] ?>.png" alt="Lista de jogo para <?= $jogo["NOME"] ?>">
                     <h2><?= $jogo["NOME"] ?></h2>
                 </div>
             </a>
@@ -106,7 +106,7 @@
             <?php foreach($noticia as $noticias) { ?>
             <a class="card-link" href="noticia.php?idnoticia=<?= $noticias['ID_NOTICIA'] ?>">    
                 <div class="card">
-                    <img src="../img/noticias/<?= $noticias["ID_NOTICIA"] ?>.png" alt="Link para a noticia <?= $noticias["TITULO"] ?>">
+                    <img src="./img/noticias/<?= $noticias["ID_NOTICIA"] ?>.png" alt="Link para a noticia <?= $noticias["TITULO"] ?>">
                     <h2><?= $noticias["TITULO"] ?></h2>
                 </div>
             </a>

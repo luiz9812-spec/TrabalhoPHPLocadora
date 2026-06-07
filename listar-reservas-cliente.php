@@ -88,8 +88,8 @@
     <main>
         <article class="introducao">
             <ul class="breadcrumb">
-                <li><a href="../index.php">Home</a></li>
-                <li><a href="../painel_cliente.php">Painel Cliente</a></li>
+                <li><a href="./index.php">Home</a></li>
+                <li><a href="./painel_cliente.php">Painel Cliente</a></li>
                 <li>Listar Reservas</li>
             </ul>
         </article>

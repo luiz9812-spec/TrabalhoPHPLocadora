@@ -73,7 +73,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game Rent - Lista de Jogos para <?= $nome ?></title>
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
     <header class="cabecalho-main">
@@ -93,8 +93,8 @@
     <main>
         <article class="introducao">
             <ul class="breadcrumb">
-                <li><a href="../index.php">Home</a></li>
-                <li><a href="../listaplataforma.php">Lista de Plataformas</a></li>
+                <li><a href="./index.php">Home</a></li>
+                <li><a href="./listaplataforma.php">Lista de Plataformas</a></li>
                 <li><?= $nome ?></li>
             </ul>
         </article>
@@ -103,7 +103,7 @@
             <?php foreach($resultado as $jogo) { ?>
             <a class="card-link" href="jogo.php?idjogo=<?= $jogo['ID_JOGO'] ?>">    
                 <div class="card">
-                    <img src="../img/jogos/<?= $jogo["ID_JOGO"] ?>.png" alt="Lista de jogo para <?= $jogo["NOME"] ?>">
+                    <img src="./img/jogos/<?= $jogo["ID_JOGO"] ?>.png" alt="Lista de jogo para <?= $jogo["NOME"] ?>">
                     <h2><?= $jogo["NOME"] ?></h2>
                 </div>
             </a>

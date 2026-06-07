@@ -86,7 +86,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game Rent - <?= $nome ?></title>
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
     <header class="cabecalho-main">
@@ -106,9 +106,9 @@
     <main>
         <article class="introducao">
             <ul class="breadcrumb">
-                <li><a href="../index.php">Home</a></li>
-                <li><a href="../listaplataforma.php">Lista de Plataformas</a></li>
-                <li><a href="../listajogos.php?idplataforma=<?= $resultado['ID_PLATAFORMA'] ?>"><?= $plataforma ?></a></li>
+                <li><a href="./index.php">Home</a></li>
+                <li><a href="./listaplataforma.php">Lista de Plataformas</a></li>
+                <li><a href="./listajogos.php?idplataforma=<?= $resultado['ID_PLATAFORMA'] ?>"><?= $plataforma ?></a></li>
                 <li><?= $nome ?></li>
             </ul>
         </article>

@@ -4,7 +4,7 @@
     $porta      = 3306;         // porta no servidor para o banco
     $banco      = "locadora";       // nome do banco de dados
     $usuario    = "root";        // usuário usado para acessar o banco
-    $senha      = "root";   // senha do usuário
+    $senha      = "";   // senha do usuário
 
     // montamos a DSN (uma string que informa à biblioteca dados sobre o banco)
     $dsn = "$tipo_banco:host=$servidor;dbname=$banco;port=$porta";
