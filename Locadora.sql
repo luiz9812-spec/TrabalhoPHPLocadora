@@ -16,6 +16,30 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `admins`
+--
+
+DROP TABLE IF EXISTS `admins`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `admins` (
+  `NOME` varchar(50) NOT NULL,
+  `SENHA` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`NOME`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `admins`
+--
+
+LOCK TABLES `admins` WRITE;
+/*!40000 ALTER TABLE `admins` DISABLE KEYS */;
+INSERT INTO `admins` VALUES ('admin1','$2y$12$k1QrLznIsqnF3tzJRPu.guAtkQXlQS65zU5psR49Pful9SYrB2SI.');
+/*!40000 ALTER TABLE `admins` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `clientes`
 --
 
@@ -102,6 +126,62 @@ LOCK TABLES `emprestimos` WRITE;
 INSERT INTO `emprestimos` VALUES (1,1,'68119358040','2026-05-01','2026-05-10',1),(2,2,'12345678901','2026-05-03','2026-05-12',1),(3,3,'23456789012','2026-05-05','2026-05-15',0),(4,4,'34567890123','2026-05-06','2026-05-16',0),(5,5,'45678901234','2026-05-07','2026-05-17',1),(6,6,'56789012345','2026-05-08','2026-05-18',0),(7,7,'67890123456','2026-05-09','2026-05-19',1),(8,8,'78901234567','2026-05-10','2026-05-20',0),(9,9,'89012345678','2026-05-11','2026-05-21',0),(10,10,'90123456789','2026-05-12','2026-05-22',1);
 /*!40000 ALTER TABLE `emprestimos` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `mudar_status_emprestar` BEFORE INSERT ON `emprestimos` FOR EACH ROW BEGIN
+	IF (SELECT DISPONIVEL FROM JOGOS WHERE ID_JOGO = NEW.ID_JOGO) = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Jogo já está emprestado';
+	END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `atualizar_status_emprestar` AFTER INSERT ON `emprestimos` FOR EACH ROW BEGIN
+    UPDATE JOGOS SET DISPONIVEL = 0 WHERE ID_JOGO = NEW.ID_JOGO;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `mudar_status_devolucao` AFTER UPDATE ON `emprestimos` FOR EACH ROW BEGIN
+	IF NEW.DEVOLVIDO = 1 THEN
+		UPDATE JOGOS SET DISPONIVEL = 1 WHERE ID_JOGO = NEW.ID_JOGO;
+	END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `generos`
@@ -196,6 +276,34 @@ INSERT INTO `listageneros` VALUES (1,'PLATAFORMA'),(2,'LUTA'),(3,'RPG'),(4,'ACAO
 UNLOCK TABLES;
 
 --
+-- Table structure for table `noticias`
+--
+
+DROP TABLE IF EXISTS `noticias`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `noticias` (
+  `ID_NOTICIA` int NOT NULL AUTO_INCREMENT,
+  `TITULO` varchar(255) DEFAULT NULL,
+  `CORPO` text,
+  `DATA_POST` date DEFAULT (curdate()),
+  `AUTOR` varchar(50) DEFAULT NULL,
+  `CREDITO` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`ID_NOTICIA`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `noticias`
+--
+
+LOCK TABLES `noticias` WRITE;
+/*!40000 ALTER TABLE `noticias` DISABLE KEYS */;
+INSERT INTO `noticias` VALUES (1,'O produtor de Pokémon Champions explica o elenco limitado e comenta sobre quando novos Pokémon serão adicionados ao jogo','<p>O produtor de Pokémon Champions, Masaaki Hoshino, falou sobre o que os jogadores podem esperar em relação à adição de Pokémon no jogo.\nDesde o lançamento, o elenco de personagens permanece o mesmo. Há algo em torno de 200 criaturas utilizáveis, mas obviamente existem muitos outros Pokémon.\nHoshino falou recentemente com a Famitsu e indicou que devemos receber mais Pokémon neste verão. Junto com isso, a equipe também vai “remover algumas restrições de itens segurados”.\nSobre o motivo de o elenco ter sido limitado no início, Hoshino explicou que a equipe “quis criar um ambiente onde até pessoas que não estão familiarizadas com batalhas Pokémon possam entendê-las”. Ele também disse na mesma entrevista que “dar aos jogadores um pouco mais de tempo para aprender esses Pokémon atuais aos poucos pode ser uma boa ideia”.\nAqui está a tradução da conversa:\n<span>Como este é um serviço de longo prazo, foi dito que ajustes de balanceamento serão feitos conforme necessário. Você pode explicar melhor o cronograma e o conteúdo que vocês imaginam?\nLogo após o lançamento, estávamos lidando com problemas à medida que os encontrávamos. Em termos de mudança do ambiente, primeiro estamos focando nossa atenção no lançamento da versão para smartphones. Depois disso, em cerca de três meses planejamos adicionar mais Pokémon e remover algumas restrições de itens segurados.\nNo estado atual, onde há muitas Mega Evoluções de Pokémon, queríamos criar um ambiente onde até pessoas que não estão familiarizadas com batalhas Pokémon pudessem entendê-las facilmente, e acredito que conseguimos isso em grande parte. Algumas pessoas disseram “o número de Pokémon e itens utilizáveis é muito pequeno”, enquanto outras disseram “já há conteúdo suficiente”, então por enquanto planejamos avançar com cautela. No lançamento para smartphones, também queremos priorizar que o jogo seja fácil de aprender para iniciantes.\nOs Pokémon e itens adicionados a partir de agora também serão apenas uma seleção limitada, certo?\nSim, isso mesmo. Observando as reações dos jogadores nas redes sociais, parece que muitos dos jogadores mais experientes compartilham o mesmo pensamento que nós: “queremos que muitos novos jogadores entrem”. Claro que, dentro disso, algumas pessoas sentem que atualmente há pouco conteúdo, mas mesmo no estado atual há muitas coisas que novos jogadores podem não entender ou achar difíceis, como habilidades especiais, itens, efeitos de habilidades, etc.\nNo momento do lançamento da versão para smartphones, esperamos que pessoas que não têm um Nintendo Switch e que nunca jogaram um jogo Pokémon também possam jogar. Com isso em mente, primeiro queremos dar ênfase à facilidade de compreensão e adicionar elementos gradualmente, em um ritmo mais suave.\nAtualmente já há mais de 200 Pokémon no jogo, e memorizar todos do zero não é uma tarefa fácil. Não é necessário lembrar de todos, certo?\nIsso mesmo. Por exemplo, no shogi existem 8 tipos de peças, mas se houvesse 200 peças seria bem difícil memorizar todas (risos). Portanto, inicialmente, dar aos jogadores mais tempo para aprender esses Pokémon aos poucos pode ser uma boa ideia.\nVocês planejam aumentar o número de Pokémon em ciclos de três meses. Nesse timing, quando também mudam regras e regulamentos, existe a possibilidade de renovar quais Pokémon podem ser usados?\nAinda não está decidido, mas isso pode ser uma possibilidade. Atualmente temos regras permitindo o uso de Mega Evoluções, mas quando mudarmos para um sistema diferente, acredito que também mudaremos os Pokémon para se adequar a esse novo sistema. Por exemplo, pode haver momentos no futuro em que Pokémon Lendários fiquem disponíveis para uso, mas isso não significa necessariamente que, só porque um Pokémon apareceu, ele sempre estará disponível. No momento ainda não está decidido, mas queremos continuar fazendo mudanças adaptativas considerando a opinião de todos.</span>\nHoshino já compartilhou outros comentários sobre o jogo anteriormente. Em uma entrevista, ele comentou sobre os gráficos do jogo. Também falou sobre como os Pokémon escolhidos para o jogo são decididos.</p>','2026-06-10','Brian','https://nintendoeverything.com/pokemon-champions-dev-explains-the-limited-roster-and-comments-on-timing-to-bring-new-pokemon-to-the-game/');
+/*!40000 ALTER TABLE `noticias` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `plataformas`
 --
 
@@ -245,6 +353,99 @@ LOCK TABLES `publishers` WRITE;
 INSERT INTO `publishers` VALUES (1,'NINTENDO'),(2,'SEGA'),(3,'SONY'),(4,'MICROSOFT'),(5,'BANDAI'),(6,'SQUARE'),(7,'CAPCOM'),(8,'505 GAMES'),(9,'ROCKSTAR'),(10,'SNK');
 /*!40000 ALTER TABLE `publishers` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `reservas`
+--
+
+DROP TABLE IF EXISTS `reservas`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `reservas` (
+  `ID_RESERVA` int NOT NULL AUTO_INCREMENT,
+  `CPF` char(11) NOT NULL,
+  `ID_JOGO` int NOT NULL,
+  `DATA_RESERVA` date DEFAULT (curdate()),
+  `PRAZO_RESERVA` date NOT NULL,
+  `FINALIZAR_RESERVA` tinyint(1) DEFAULT '1',
+  PRIMARY KEY (`ID_RESERVA`),
+  KEY `CPF` (`CPF`),
+  KEY `ID_JOGO` (`ID_JOGO`),
+  CONSTRAINT `reservas_ibfk_1` FOREIGN KEY (`CPF`) REFERENCES `clientes` (`CPF`),
+  CONSTRAINT `reservas_ibfk_2` FOREIGN KEY (`ID_JOGO`) REFERENCES `jogos` (`ID_JOGO`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `reservas`
+--
+
+LOCK TABLES `reservas` WRITE;
+/*!40000 ALTER TABLE `reservas` DISABLE KEYS */;
+/*!40000 ALTER TABLE `reservas` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `mudar_status_reserva` BEFORE INSERT ON `reservas` FOR EACH ROW BEGIN
+	IF (SELECT DISPONIVEL FROM JOGOS WHERE ID_JOGO = NEW.ID_JOGO) = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Jogo já está emprestado';
+	END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `atualizar_status_reserva` AFTER INSERT ON `reservas` FOR EACH ROW BEGIN
+    UPDATE JOGOS SET DISPONIVEL = 0 WHERE ID_JOGO = NEW.ID_JOGO;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `mudar_status_prazo` AFTER UPDATE ON `reservas` FOR EACH ROW BEGIN
+    IF OLD.FINALIZAR_RESERVA <> NEW.FINALIZAR_RESERVA THEN
+        IF (SELECT COUNT(*) FROM EMPRESTIMOS WHERE ID_JOGO = NEW.ID_JOGO AND DEVOLVIDO = 0) = 0 THEN
+            UPDATE JOGOS SET DISPONIVEL = 1 WHERE ID_JOGO = NEW.ID_JOGO;
+        END IF;
+    END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+
+--
+-- Dumping events for database 'locadora'
+--
 
 --
 -- Dumping routines for database 'locadora'
@@ -311,4 +512,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-05-24 13:38:15
+-- Dump completed on 2026-06-10 21:19:38
